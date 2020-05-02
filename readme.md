@@ -11,7 +11,14 @@ This app is best installed using
 Alternatively, you can download the `accu_allergies` directory from inside the `apps` directory here to your
 local `apps` directory, then add the configuration to enable the `accu_allergies` module.
 
-You will also need to install Beautiful Soup / bs4 and then copy the bs4 directory into the apps directory in Appdaemon or potentially (I haven't tried it) add bs4 to your python packages.
+You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon.
+
+```yaml
+system_packages: []
+python_packages:
+  - bs4
+init_commands: []
+```
 
 ## How it works
 
