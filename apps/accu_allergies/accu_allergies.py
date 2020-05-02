@@ -151,7 +151,7 @@ class Get_Accu_Allergies(hass.Hass):
     def load_sensors(self):    
         #if no current data files
         with shelve.open(self.ACC_FILE) as allergies_db:
-            if self.url_txt_sets[0][1] not in allergies_db:
+            if "updated" not in allergies_db:
                 self.get_html_data()
 
         #create the sensors
