@@ -124,12 +124,12 @@ class Get_Accu_Allergies(hass.Hass):
         date_time = tim.strftime("%d/%m/%Y, %H:%M:%S")
         #add date time to the save file
         with shelve.open(self.ACC_FILE) as allergies_db:
-            allergies_db["time"] = date_time
+            allergies_db["updated"] = date_time
 
     def create_get_sensor(self):
         #get last update date time from the save file 
         with shelve.open(self.ACC_FILE) as allergies_db:
-            date_time = allergies_db["time"]
+            date_time = allergies_db["updated"]
         #create the sensor
         self.set_state("sensor.acc_data_last_sourced", state=date_time, replace=True, attributes={"icon": "mdi:timeline-clock-outline", "friendly_name": "ACC Allergy Data last sourced"})
 
