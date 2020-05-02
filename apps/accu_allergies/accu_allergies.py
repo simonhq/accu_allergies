@@ -118,7 +118,7 @@ class Get_Accu_Allergies(hass.Hass):
         #update the sensor
         self.create_get_sensor()
 
-    def set_get_sensor(self)
+    def set_get_sensor(self):
         #create a sensor to keep track last time this was run
         tim = datetime.datetime.now()
         date_time = tim.strftime("%d/%m/%Y, %H:%M:%S")
@@ -126,7 +126,7 @@ class Get_Accu_Allergies(hass.Hass):
         with shelve.open(self.ACC_FILE) as allergies_db:
             allergies_db["time"] = date_time
 
-    def create_get_sensor(self)
+    def create_get_sensor(self):
         #get last update date time from the save file 
         with shelve.open(self.ACC_FILE) as allergies_db:
             date_time = allergies_db["time"]
