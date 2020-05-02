@@ -113,9 +113,24 @@ class Get_Accu_Allergies(hass.Hass):
         # write the html into the local shelve file
         with shelve.open(self.ACC_FILE) as allergies_db:
             allergies_db[txt] = data_from_website
+        #write out the get sensor
+        self.set_get_sensor()
+        #update the sensor
+        self.create_get_sensor()
+
+    def set_get_sensor(self)
         #create a sensor to keep track last time this was run
         tim = datetime.datetime.now()
         date_time = tim.strftime("%d/%m/%Y, %H:%M:%S")
+        #add date time to the save file
+        with shelve.open(self.ACC_FILE) as allergies_db:
+            allergies_db["time"] = date_time
+
+    def create_get_sensor(self)
+        #get last update date time from the save file 
+        with shelve.open(self.ACC_FILE) as allergies_db:
+            date_time = allergies_db["time"]
+        #create the sensor
         self.set_state("sensor.acc_data_last_sourced", state=date_time, replace=True, attributes={"icon": "mdi:timeline-clock-outline", "friendly_name": "ACC Allergy Data last sourced"})
 
     #get the html from the website
@@ -152,6 +167,8 @@ class Get_Accu_Allergies(hass.Hass):
         self.get_migraine_info(self.url_txt_sets[4][1])
         #sinus
         self.get_sinus_info(self.url_txt_sets[5][1])
+        #update the last updated sensor
+        self.create_get_sensor()
 
         
     #get the info for pollens - ragweed, grass, tree, mold, dust and air quality
