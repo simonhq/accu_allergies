@@ -1,4 +1,15 @@
 
+## AppDaemon configuration
+
+You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon.
+
+```yaml
+system_packages: []
+python_packages:
+  - bs4
+init_commands: []
+```
+
 ## App configuration
 
 ```yaml

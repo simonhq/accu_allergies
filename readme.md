@@ -11,15 +11,6 @@ This app is best installed using
 Alternatively, you can download the `accu_allergies` directory from inside the `apps` directory here to your
 local `apps` directory, then add the configuration to enable the `accu_allergies` module.
 
-You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon.
-
-```yaml
-system_packages: []
-python_packages:
-  - bs4
-init_commands: []
-```
-
 ## How it works
 
 The [AccuWeather](https://www.accuweather.com/) site provides this information, this just scrapes the page and makes the information available as a sensor in HA.
@@ -37,6 +28,17 @@ To reduce the number of requests to the website, I have made this a two stage sy
 the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your file.
 
 Therefore you will need to chain the two `input_boolean` requests so that one is offset by a minute to allow for the data to be downloaded.
+
+## AppDaemon configuration
+
+You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon.
+
+```yaml
+system_packages: []
+python_packages:
+  - bs4
+init_commands: []
+```
 
 ## App configuration
 
