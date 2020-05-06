@@ -24,9 +24,6 @@
 #   URL_CITY: "canberra"
 #   URL_COUNTRY: "au"
 #   URL_LANG: "en"
-#   global_dependencies:
-#     - globals
-#     - secrets
 #
 # https://www.accuweather.com/en/au/canberra/21921/allergies-weather/21921
 # https://www.accuweather.com/en/au/canberra/21921/cold-flu-weather/21921
@@ -39,12 +36,9 @@
 
 # import the function libraries for beautiful soup
 from bs4 import BeautifulSoup
-#from requests_html import HTMLSession
-from os import path
 import json
 import datetime
 import appdaemon.plugins.hass.hassapi as hass
-import globals
 import requests
 import shelve
 
@@ -70,13 +64,13 @@ class Get_Accu_Allergies(hass.Hass):
     # run to setup the system
     def initialize(self):
         #get the info for the system
-        self.ACC_FILE = globals.get_arg(self.args, "ACC_FILE")
-        self.ACC_FLAG = globals.get_arg(self.args, "ACC_FLAG")
-        self.DEB_FLAG = globals.get_arg(self.args, "DEB_FLAG")
-        self.URL_LANG = globals.get_arg(self.args, "URL_LANG")
-        self.URL_COUNTRY = globals.get_arg(self.args, "URL_COUNTRY")
-        self.URL_CITY = globals.get_arg(self.args, "URL_CITY")
-        self.URL_ID = globals.get_arg(self.args, "URL_ID")
+        self.ACC_FILE = self.args["ACC_FILE"]
+        self.ACC_FLAG = self.args["ACC_FLAG"]
+        self.DEB_FLAG = self.args["DEB_FLAG"]
+        self.URL_LANG = self.args["URL_LANG"]
+        self.URL_COUNTRY = self.args["URL_COUNTRY"]
+        self.URL_CITY = self.args["URL_CITY"]
+        self.URL_ID = self.args["URL_ID"]
 
         #create the original sensors
         self.load_sensors()
