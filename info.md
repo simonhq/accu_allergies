@@ -1,7 +1,7 @@
 
 ## AppDaemon configuration
 
-You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon.
+You will also need to install Beautiful Soup / bs4 by adding bs4 to your python packages in Appdaemon 4 configuration on the add-on panel.
 
 ```yaml
 system_packages: []
@@ -11,6 +11,8 @@ init_commands: []
 ```
 
 ## App configuration
+
+In the appdaemon/apps/apps.yaml file -
 
 ```yaml
 accu_allergies:
@@ -36,3 +38,35 @@ key | optional | type | default | description
 `URL_CITY` | False | string | | The name on the AccuWeather webpage for the node you want information for
 `URL_COUNTRY` | False | string | | The country code on the AccuWeather webpage for the node you want information for
 `URL_LANG` | False | string | | The language code on the AccuWeather webpage for the node you want information for
+
+## Sensors to be created
+
+This app will create 25 sensors
+
+* sensor.acc_data_last_sourced
+* sensor.acc_ragweed_pollen_today
+* sensor.acc_ragweed_pollen_tomorrow
+* sensor.acc_grass_pollen_today
+* sensor.acc_grass_pollen_tomorrow
+* sensor.acc_tree_pollen_today
+* sensor.acc_tree_pollen_tomorrow
+* sensor.acc_mold_today
+* sensor.acc_mold_tomorrow
+* sensor.acc_dust_today
+* sensor.acc_dust_tomorrow
+* sensor.acc_air_today
+* sensor.acc_air_tomorrow
+* sensor.acc_common_cold_today
+* sensor.acc_common_cold_tomorrow
+* sensor.acc_flu_today
+* sensor.acc_flu_tomorrow
+* sensor.acc_asthma_today
+* sensor.acc_asthma_tomorrow
+* sensor.acc_arthritis_today
+* sensor.acc_arthritis_tomorrow
+* sensor.acc_migraine_today
+* sensor.acc_migraine_tomorrow
+* sensor.acc_sinus_today
+* sensor.acc_sinus_tomorrow
+
+The actual site holds 12 days of information for each of the 12 concepts, but I have only chosen to get the current day and the next day.
