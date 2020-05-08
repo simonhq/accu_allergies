@@ -5,7 +5,7 @@ _Creates sensors for Home Assistant with the AccuWeather Allergy level informati
 
 ## Lovelace Example
 
-![Example of Allergies information in Lovelace](./accu_allergies_glances.png)
+![Example of Allergies information in Lovelace](https://github.com/simonhq/accu_allergies/blob/master/accu_allergies_glances.PNG)
 
 ## Installation
 
