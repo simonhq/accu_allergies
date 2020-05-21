@@ -5,8 +5,7 @@
 # written to be run from AppDaemon for a HASS or HASSIO install
 #
 # Written: 30/04/2020
-# on windows use py -m pip install beautifulsoup4
-# you will need to copy the bs4 folder into your appdaemon/apps folder
+# Updated: 21/05/2020
 ############################################################
 
 ############################################################
@@ -55,6 +54,7 @@ class Get_Accu_Allergies(hass.Hass):
     headers = {
         'User-Agent': 'Mozilla/5.0'
     }
+    script_id = 8
 
     #"https://www.accuweather.com/URL_LANG/URL_COUNTRY/URL_CITY/URL_ID/cold-flu-weather/URL_ID"
     #url building
@@ -151,11 +151,13 @@ class Get_Accu_Allergies(hass.Hass):
         #if no current data files
         collect_flag = 0
         with shelve.open(self.ACC_FILE) as allergies_db:
+            #self.log(allergies_db[self.url_txt_sets[0][1]])
             if "updated" not in allergies_db:
                 collect_flag = 1
                 
         if collect_flag == 1:
             self.get_html_data()
+
 
         #create the sensors
         #pollens etc
@@ -184,7 +186,7 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
         #split by the 'var ' so we can get the correct variable values
@@ -263,7 +265,7 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
         #split by the 'var ' so we can get the correct variable values
@@ -306,9 +308,10 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
+        #self.log(tags)
         #split by the 'var ' so we can get the correct variable values
         stags = tags.split("var ")
         #get the 3rd variable field from the list (lifestyle)
@@ -340,7 +343,7 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
         #split by the 'var ' so we can get the correct variable values
@@ -374,7 +377,7 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
         #split by the 'var ' so we can get the correct variable values
@@ -408,7 +411,7 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[2]
+        all_tags = soup.findAll('script')[self.script_id]
         #convert the soup variable into a string so we can manipulate
         tags = str(all_tags)
         #split by the 'var ' so we can get the correct variable values
