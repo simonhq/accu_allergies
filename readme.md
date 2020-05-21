@@ -1,3 +1,5 @@
+## NOTE - added automatic daily download 
+
 # AccuWeather Allergies
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
@@ -9,27 +11,22 @@ _Creates sensors for Home Assistant with the AccuWeather Allergy level informati
 
 ## Installation
 
-This app is best installed using
-[HACS](https://github.com/custom-components/hacs), so that you can easily track and download updates.
+This app is best installed using [HACS](https://github.com/custom-components/hacs), so that you can easily track and download updates.
 
-Alternatively, you can download the `accu_allergies` directory from inside the `apps` directory here to your
-local `apps` directory, then add the configuration to enable the `accu_allergies` module.
+Alternatively, you can download the `accu_allergies` directory from inside the `apps` directory here to your local `apps` directory, then add the configuration to enable the `accu_allergies` module.
 
 ## How it works
 
 The [AccuWeather](https://www.accuweather.com/) site provides this information, this just scrapes the page and makes the information available as a sensor in HA.
 
-As this is non time critical sensor, it does not get the information on a set time schedule, but watches a input_boolean that you 
-specify for when to update the sensor. You can obviously automate when you want that input_boolean to turn on.
+As this is non time critical sensor, it only gets the information on a set time schedule, once per day at 5.07am, but it also watches an `input_boolean` that you specify for when to update the sensor. You can obviously automate when you want that input_boolean to turn on.
 
-### To Run
+### To Run outside of the schedule
 
-You will need to create an input_boolean entity to watch for when to update the sensor. When this
-`input_boolean` is turned on, whether manually or by another automation you
+You will need to create an input_boolean entity to watch for when to update the sensor. When this `input_boolean` is turned on, whether manually or by another automation you
 create, the scraping process will be run to create/update the sensor.
 
-To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when
-the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your file.
+To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your file.
 
 Therefore you will need to chain the two `input_boolean` requests so that one is offset by a minute to allow for the data to be downloaded.
 
