@@ -81,9 +81,9 @@ class Get_Accu_Allergies(hass.Hass):
         self.listen_state(self.set_acc_sensors, self.DEB_FLAG, new="on")
 
         # set to run each morning at 5.07am
-        runtime = datatime.time(5,7,0)
+        runtime = datetime.time(5,7,0)
         self.run_daily(self.get_all_data, runtime)
-        runtime = datatime.time(5,8,0)
+        runtime = datetime.time(5,8,0)
         self.run_daily(self.set_acc_sensors, runtime)
 
     #get the information from each of the pages and write them into text files for reuse
