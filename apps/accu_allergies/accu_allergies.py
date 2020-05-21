@@ -82,9 +82,8 @@ class Get_Accu_Allergies(hass.Hass):
 
         # set to run each morning at 5.07am
         runtime = datetime.time(5,7,0)
-        self.run_daily(self.get_all_data, runtime)
-        runtime = datetime.time(5,8,0)
-        self.run_daily(self.set_acc_sensors, runtime)
+        self.run_daily(self.daily_load_sensors, runtime)
+        
 
     #get the information from each of the pages and write them into text files for reuse
     def get_all_data(self, entity, attribute, old, new, kwargs):
@@ -146,7 +145,7 @@ class Get_Accu_Allergies(hass.Hass):
         #turn off the flag
         self.turn_off(self.DEB_FLAG)
 
-
+    # this loads the first time run and on a restart of appdaemon
     def load_sensors(self):    
         #if no current data files
         collect_flag = 0
@@ -157,7 +156,6 @@ class Get_Accu_Allergies(hass.Hass):
                 
         if collect_flag == 1:
             self.get_html_data()
-
 
         #create the sensors
         #pollens etc
@@ -175,6 +173,26 @@ class Get_Accu_Allergies(hass.Hass):
         #update the last updated sensor
         self.create_get_sensor()
 
+    # this runs each morning
+    def daily_load_sensors(self, kwargs):    
+        #get data
+        self.get_html_data()
+
+        #create the sensors
+        #pollens etc
+        self.get_allergies_info(self.url_txt_sets[0][1])
+        #cold and flu
+        self.get_coldflu_info(self.url_txt_sets[1][1])
+        #asthma
+        self.get_asthma_info(self.url_txt_sets[2][1])
+        #arthritis
+        self.get_arthritis_info(self.url_txt_sets[3][1])
+        #migraine
+        self.get_migraine_info(self.url_txt_sets[4][1])
+        #sinus
+        self.get_sinus_info(self.url_txt_sets[5][1])
+        #update the last updated sensor
+        self.create_get_sensor()
         
     #get the info for pollens - ragweed, grass, tree, mold, dust and air quality
     def get_allergies_info(self, txt):
