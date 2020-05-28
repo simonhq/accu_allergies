@@ -54,8 +54,7 @@ class Get_Accu_Allergies(hass.Hass):
     headers = {
         'User-Agent': 'Mozilla/5.0'
     }
-    script_id = 8
-
+        
     #"https://www.accuweather.com/URL_LANG/URL_COUNTRY/URL_CITY/URL_ID/cold-flu-weather/URL_ID"
     #url building
     url_base = "https://www.accuweather.com"
@@ -156,6 +155,7 @@ class Get_Accu_Allergies(hass.Hass):
                 
         if collect_flag == 1:
             self.get_html_data()
+            self.log("get")
 
         #create the sensors
         #pollens etc
@@ -204,18 +204,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the ragweed pollen info for today(d) and tomorrow(t)
         rag_val_d = jtags["ragweed-pollen"][0]["value"]
@@ -283,18 +287,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the common cold info for today(d) and tomorrow(t)
         cco_val_d = jtags["common-cold"][0]["value"]
@@ -326,19 +334,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #self.log(tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the asthma info for today(d) and tomorrow(t)
         ast_val_d = jtags["asthma"][0]["value"]
@@ -361,18 +372,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the arthritis info for today(d) and tomorrow(t)
         art_val_d = jtags["arthritis"][0]["value"]
@@ -395,18 +410,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the migraine info for today(d) and tomorrow(t)
         mig_val_d = jtags["migraine"][0]["value"]
@@ -429,18 +448,22 @@ class Get_Accu_Allergies(hass.Hass):
         soup = BeautifulSoup(html_info, "html.parser")
 
         #get the 7th script block with the variables in it
-        all_tags = soup.findAll('script')[self.script_id]
+        all_tags = soup.findAll('script') 
         #convert the soup variable into a string so we can manipulate
-        tags = str(all_tags)
-        #split by the 'var ' so we can get the correct variable values
-        stags = tags.split("var ")
-        #get the 3rd variable field from the list (lifestyle)
-        stags = stags[2]
-        #remove the js variable and ; so we get to the raw data
-        stags = stags.replace("lifestyleForecast = ", "")
-        stags = stags.replace(";", "")
-        #convert to json
-        jtags = json.loads(stags)
+        
+        for tags in all_tags:
+            str_tags = str(tags).replace('\n', " ")
+            #self.log(str_tags[0:26])
+            if str_tags[0:26] == "<script> var dailyForecast":
+                #split by the 'var ' so we can get the correct variable values
+                stags = str_tags.split("var ")
+                #get the 3rd variable field from the list (lifestyle)
+                stags = stags[2]
+                #remove the js variable and ; so we get to the raw data
+                stags = stags.replace("lifestyleForecast = ", "")
+                stags = stags.replace(";", "")
+                #convert to json
+                jtags = json.loads(stags)
 
         #get the sinus info for today(d) and tomorrow(t)
         sin_val_d = jtags["sinus"][0]["value"]
