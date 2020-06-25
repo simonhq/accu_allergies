@@ -26,7 +26,7 @@ As this is non time critical sensor, it only gets the information on a set time 
 You will need to create an input_boolean entity to watch for when to update the sensor. When this `input_boolean` is turned on, whether manually or by another automation you
 create, the scraping process will be run to create/update the sensor.
 
-To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your file.
+To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your saved data file from that morning.
 
 Therefore you will need to chain the two `input_boolean` requests so that one is offset by a minute to allow for the data to be downloaded.
 
@@ -54,6 +54,7 @@ accu_allergies:
   URL_CITY: "canberra"
   URL_COUNTRY: "au"
   URL_LANG: "en"
+  URL_POSTCODE: ""
 ```
 
 key | optional | type | default | description
@@ -63,10 +64,11 @@ key | optional | type | default | description
 `ACC_FILE` | False | string | | path and name of a file to store html in, to reduce number of requests to the website
 `ACC_FLAG` | False | string | | The name of the flag in HA for triggering getting the information from the website 
 `DEB_FLAG` | False | string | | The name of the flag in HA for triggering refreshing the sensors from the stored html
-`URL_ID` | False | string | | The id on the AccuWeather webpage for the node you want information for
+`URL_ID` | False | string | | The ID on the AccuWeather webpage for the node you want information for
 `URL_CITY` | False | string | | The name on the AccuWeather webpage for the node you want information for
 `URL_COUNTRY` | False | string | | The country code on the AccuWeather webpage for the node you want information for
 `URL_LANG` | False | string | | The language code on the AccuWeather webpage for the node you want information for
+`URL_POSTCODE` | True | string | | Some locations use the postcode as well as an ID in the AccuWeather webpage URL, this will default to the ID value if left blank
 
 ## Sensors to be created
 

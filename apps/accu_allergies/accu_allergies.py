@@ -5,7 +5,8 @@
 # written to be run from AppDaemon for a HASS or HASSIO install
 #
 # Written: 30/04/2020
-# Updated: 21/05/2020
+# Updated: 26/06/2020
+# added postcode in addition to ID for some locations
 ############################################################
 
 ############################################################
@@ -23,6 +24,7 @@
 #   URL_CITY: "canberra"
 #   URL_COUNTRY: "au"
 #   URL_LANG: "en"
+#   URL_POSTCODE: ""
 #
 # https://www.accuweather.com/en/au/canberra/21921/allergies-weather/21921
 # https://www.accuweather.com/en/au/canberra/21921/cold-flu-weather/21921
@@ -49,6 +51,7 @@ class Get_Accu_Allergies(hass.Hass):
     URL_COUNTRY = ""
     URL_CITY = ""
     URL_ID = ""
+    URL_POSTCODE = ""
     
     payload = {}
     headers = {
@@ -70,6 +73,14 @@ class Get_Accu_Allergies(hass.Hass):
         self.URL_COUNTRY = self.args["URL_COUNTRY"]
         self.URL_CITY = self.args["URL_CITY"]
         self.URL_ID = self.args["URL_ID"]
+        #see if they have included a postcode value, if not, just use the ID value
+        try:
+            self.URL_POSTCODE = self.args["URL_ID"]
+        except:
+            self.URL_POSTCODE = self.URL_ID
+        #check that the postcode is blank, and if so set it to the ID value
+        if self.URL_POSTCODE == "":
+            self.URL_POSTCODE = self.URL_ID
 
         #create the original sensors
         self.load_sensors()
@@ -94,7 +105,7 @@ class Get_Accu_Allergies(hass.Hass):
     #request the website information
     def get_html_data(self):
         #build the url for the correct country and area
-        start_url = self.url_base + "/" + self.URL_LANG + "/" + self.URL_COUNTRY + "/" + self.URL_CITY + "/" + self.URL_ID
+        start_url = self.url_base + "/" + self.URL_LANG + "/" + self.URL_COUNTRY + "/" + self.URL_CITY + "/" + self.URL_POSTCODE
         #for each of the allergy pages
         for sets in self.url_txt_sets:
             #build the url for this allergy type

@@ -25,6 +25,7 @@ accu_allergies:
   URL_CITY: "canberra"
   URL_COUNTRY: "au"
   URL_LANG: "en"
+  URL_POSTCODE: ""
 ```
 
 key | optional | type | default | description
@@ -34,10 +35,11 @@ key | optional | type | default | description
 `ACC_FILE` | False | string | | path and name of a file to store html in, to reduce number of requests to the website
 `ACC_FLAG` | False | string | | The name of the flag in HA for triggering getting the information from the website 
 `DEB_FLAG` | False | string | | The name of the flag in HA for triggering refreshing the sensors from the stored html
-`URL_ID` | False | string | | The id on the AccuWeather webpage for the node you want information for
+`URL_ID` | False | string | | The ID on the AccuWeather webpage for the node you want information for
 `URL_CITY` | False | string | | The name on the AccuWeather webpage for the node you want information for
 `URL_COUNTRY` | False | string | | The country code on the AccuWeather webpage for the node you want information for
 `URL_LANG` | False | string | | The language code on the AccuWeather webpage for the node you want information for
+`URL_POSTCODE` | True | string | | Some locations use the postcode as well as an ID in the AccuWeather webpage URL this will default to the ID value if left blank
 
 ## Sensors to be created
 
