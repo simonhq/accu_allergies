@@ -75,7 +75,7 @@ class Get_Accu_Allergies(hass.Hass):
         self.URL_ID = self.args["URL_ID"]
         #see if they have included a postcode value, if not, just use the ID value
         try:
-            self.URL_POSTCODE = self.args["URL_ID"]
+            self.URL_POSTCODE = self.args["URL_POSTCODE"]
         except:
             self.URL_POSTCODE = self.URL_ID
         #check that the postcode is blank, and if so set it to the ID value
@@ -116,7 +116,7 @@ class Get_Accu_Allergies(hass.Hass):
     #request the website information and write it to a file
     def get_data(self, url, txt):
         # request the rendered html
-        self.log("request" + url)
+        self.log("request " + url)
         data_from_website = self.get_html(url) 
         # write the html into the local shelve file
         with shelve.open(self.ACC_FILE) as allergies_db:
