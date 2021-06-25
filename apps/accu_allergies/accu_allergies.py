@@ -68,7 +68,15 @@ class Get_Accu_Allergies(hass.Hass):
     # extended - cold, flu, ragweed pollen, grass pollen, tree pollen, mold, dust
     #["/allergies-weather/","allergies"], ["/cold-flu-weather/","coldflu"]
     url_txt_xtd = [["/allergies-weather/", "?name=ragweed-pollen" , "ragweed"], ["/allergies-weather/", "?name=grass-pollen" , "grass"], ["/allergies-weather/", "?name=tree-pollen" , "tree"], ["/allergies-weather/", "?name=mold" , "mold"], ["/allergies-weather/", "?name=dust-dander" , "dust"], ["/cold-flu-weather/", "?name=common-cold" , "cold"], ["/cold-flu-weather/", "?name=flu" , "flu"]]
-    
+
+    def cleanString(self, s):
+        retstr = ""
+        for chars in s:
+                retstr += self.removeNonAscii(chars)
+        return retstr
+
+    def removeNonAscii(self, s): 
+        return ''.join(i for i in s if ord(i)<126 and ord(i)>31)    
 
     # run to setup the system
     def initialize(self):
@@ -247,13 +255,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
         
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for ragweed        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_ragweed_pollen_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Today", "today_ragweed_value": myvals[0].text , "today_ragweed_phrase": myconds[0].text })
-            self.set_state("sensor.acc_ragweed_pollen_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Tomorrow", "tomorrow_ragweed_value": myvals[1].text , "tomorrow_ragweed_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_ragweed_pollen_today", state=myvalseta, replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Today", "today_ragweed_value": myvals[0].text , "today_ragweed_phrase": myconds[0].text })
+            self.set_state("sensor.acc_ragweed_pollen_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Tomorrow", "tomorrow_ragweed_value": myvals[1].text , "tomorrow_ragweed_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_ragweed_pollen_today", state='Unknown', replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Today", "today_ragweed_value": 'Unknown' , "today_ragweed_phrase": 'Unknown' })
             self.set_state("sensor.acc_ragweed_pollen_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:clover", "friendly_name": "Ragweed Pollen Tomorrow", "tomorrow_ragweed_value": 'Unknown' , "tomorrow_ragweed_phrase": 'Unknown' })
@@ -268,13 +278,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
         
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for ragweed        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_grass_pollen_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Today", "today_grass_value": myvals[0].text , "today_grass_phrase": myconds[0].text })
-            self.set_state("sensor.acc_grass_pollen_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Tomorrow", "tomorrow_grass_value": myvals[1].text , "tomorrow_grass_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_grass_pollen_today", state=myvalseta, replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Today", "today_grass_value": myvals[0].text , "today_grass_phrase": myconds[0].text })
+            self.set_state("sensor.acc_grass_pollen_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Tomorrow", "tomorrow_grass_value": myvals[1].text , "tomorrow_grass_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_grass_pollen_today", state='Unknown', replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Today", "today_grass_value": 'Unknown' , "today_grass_phrase": 'Unknown' })
             self.set_state("sensor.acc_grass_pollen_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:barley", "friendly_name": "Grass Pollen Tomorrow", "tomorrow_grass_value": 'Unknown' , "tomorrow_grass_phrase": 'Unknown' })
@@ -289,13 +301,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
         
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for ragweed        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_tree_pollen_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Today", "today_tree_value": myvals[0].text , "today_tree_phrase": myconds[0].text })
-            self.set_state("sensor.acc_tree_pollen_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Tomorrow", "tomorrow_tree_value": myvals[1].text , "tomorrow_tree_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_tree_pollen_today", state=myvalseta, replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Today", "today_tree_value": myvals[0].text , "today_tree_phrase": myconds[0].text })
+            self.set_state("sensor.acc_tree_pollen_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Tomorrow", "tomorrow_tree_value": myvals[1].text , "tomorrow_tree_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_tree_pollen_today", state='Unknown', replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Today", "today_tree_value": 'Unknown' , "today_tree_phrase": 'Unknown' })
             self.set_state("sensor.acc_tree_pollen_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:tree-outline", "friendly_name": "Tree Pollen Tomorrow", "tomorrow_tree_value": 'Unknown' , "tomorrow_tree_phrase": 'Unknown' })
@@ -310,13 +324,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
         
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for ragweed        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_mold_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Today", "today_mold_value": myvals[0].text , "today_mold_phrase": myconds[0].text })
-            self.set_state("sensor.acc_mold_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Tomorrow", "tomorrow_mold_value": myvals[1].text , "tomorrow_mold_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_mold_today", state=myvalseta, replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Today", "today_mold_value": myvals[0].text , "today_mold_phrase": myconds[0].text })
+            self.set_state("sensor.acc_mold_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Tomorrow", "tomorrow_mold_value": myvals[1].text , "tomorrow_mold_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_mold_today", state='Unknown', replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Today", "today_mold_value": 'Unknown' , "today_mold_phrase": 'Unknown' })
             self.set_state("sensor.acc_mold_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:bacteria-outline", "friendly_name": "Mold Tomorrow", "tomorrow_mold_value": 'Unknown' , "tomorrow_mold_phrase": 'Unknown' })
@@ -331,13 +347,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
         
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for ragweed        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_dust_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Today", "today_dust_value": myvals[0].text , "today_dust_phrase": myconds[0].text })
-            self.set_state("sensor.acc_dust_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Tomorrow", "tomorrow_dust_value": myvals[1].text , "tomorrow_dust_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_dust_today", state=myvalseta, replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Today", "today_dust_value": myvals[0].text , "today_dust_phrase": myconds[0].text })
+            self.set_state("sensor.acc_dust_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Tomorrow", "tomorrow_dust_value": myvals[1].text , "tomorrow_dust_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_dust_today", state='Unknown', replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Today", "today_dust_value": 'Unknown' , "today_dust_phrase": 'Unknown' })
             self.set_state("sensor.acc_dust_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:cloud-search-outline", "friendly_name": "Dust Tomorrow", "tomorrow_dust_value": 'Unknown' , "tomorrow_dust_phrase": 'Unknown' })
@@ -351,13 +369,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for cold        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_common_cold_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Today", "today_common_value": myvals[0].text , "today_common_phrase": myconds[0].text })
-            self.set_state("sensor.acc_common_cold_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Tomorrow", "tomorrow_common_value": myvals[1].text , "tomorrow_common_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_common_cold_today", state=myvalseta, replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Today", "today_common_value": myvals[0].text , "today_common_phrase": myconds[0].text })
+            self.set_state("sensor.acc_common_cold_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Tomorrow", "tomorrow_common_value": myvals[1].text , "tomorrow_common_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_common_cold_today", state='Unknown', replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Today", "today_common_value": 'Unknown' , "today_common_phrase": 'Unknown' })
             self.set_state("sensor.acc_common_cold_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:snowflake-alert", "friendly_name": "Common Cold Tomorrow", "tomorrow_common_value": 'Unknown' , "tomorrow_common_phrase": 'Unknown' })
@@ -371,13 +391,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
 
         #create the hassio sensors for today and tomorrow for cold        
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_flu_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Today", "today_flu_value": myvals[0].text , "today_flu_phrase": myconds[0].text })
-            self.set_state("sensor.acc_flu_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Tomorrow", "tomorrow_flu_value": myvals[1].text , "tomorrow_flu_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_flu_today", state=myvalseta, replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Today", "today_flu_value": myvals[0].text , "today_flu_phrase": myconds[0].text })
+            self.set_state("sensor.acc_flu_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Tomorrow", "tomorrow_flu_value": myvals[1].text , "tomorrow_flu_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_flu_today", state='Unknown', replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Today", "today_flu_value": 'Unknown' , "today_flu_phrase": 'Unknown' })
             self.set_state("sensor.acc_flu_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:bacteria", "friendly_name": "Flu Tomorrow", "tomorrow_flu_value": 'Unknown' , "tomorrow_flu_phrase": 'Unknown' })
@@ -392,13 +414,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
         
         #create the hassio sensors for today and tomorrow for asthma
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_asthma_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Today", "today_asthma_value": myvals[0].text , "today_asthma_phrase": myconds[0].text })
-            self.set_state("sensor.acc_asthma_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Tomorrow", "tomorrow_asthma_value": myvals[1].text , "tomorrow_asthma_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_asthma_today", state=myvalseta, replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Today", "today_asthma_value": myvals[0].text , "today_asthma_phrase": myconds[0].text })
+            self.set_state("sensor.acc_asthma_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Tomorrow", "tomorrow_asthma_value": myvals[1].text , "tomorrow_asthma_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_asthma_today", state='Unknown', replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Today", "today_asthma_value": 'Unknown' , "today_asthma_phrase": 'Unknown' })
             self.set_state("sensor.acc_asthma_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:lungs", "friendly_name": "Asthma Tomorrow", "tomorrow_asthma_value": 'Unknown' , "tomorrow_asthma_phrase": 'Unknown' })
@@ -413,13 +437,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
         
         #create the hassio sensors for today and tomorrow for arthritis
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_arthritis_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Today", "today_arthritis_value": myvals[0].text , "today_arthritis_phrase": myconds[0].text })
-            self.set_state("sensor.acc_arthritis_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Tomorrow", "tomorrow_arthritis_value": myvals[1].text , "tomorrow_arthritis_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_arthritis_today", state=myvalseta, replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Today", "today_arthritis_value": myvals[0].text , "today_arthritis_phrase": myconds[0].text })
+            self.set_state("sensor.acc_arthritis_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Tomorrow", "tomorrow_arthritis_value": myvals[1].text , "tomorrow_arthritis_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_arthritis_today", state='Unknown', replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Today", "today_arthritis_value": 'Unknown' , "today_arthritis_phrase": 'Unknown' })
             self.set_state("sensor.acc_arthritis_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:bone", "friendly_name": "Arthritis Tomorrow", "tomorrow_arthritis_value": 'Unknown' , "tomorrow_arthritis_phrase": 'Unknown' })
@@ -433,17 +459,18 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
         
         #create the hassio sensors for today and tomorrow for migraine
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_migraine_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Today", "today_migraine_value": myvals[0].text , "today_migraine_phrase": myconds[0].text })
-            self.set_state("sensor.acc_migraine_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Tomorrow", "tomorrow_migraine_value": myvals[1].text , "tomorrow_migraine_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_migraine_today", state=myvalseta, replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Today", "today_migraine_value": myvals[0].text , "today_migraine_phrase": myconds[0].text })
+            self.set_state("sensor.acc_migraine_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Tomorrow", "tomorrow_migraine_value": myvals[1].text , "tomorrow_migraine_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_migraine_today", state='Unknown', replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Today", "today_migraine_value": 'Unknown' , "today_migraine_phrase": 'Unknown' })
             self.set_state("sensor.acc_migraine_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:head-flash", "friendly_name": "Migraine Tomorrow", "tomorrow_migraine_value": 'Unknown' , "tomorrow_migraine_phrase": 'Unknown' })
-
         
     
     #get the info for sinus
@@ -455,13 +482,15 @@ class Get_Accu_Allergies(hass.Hass):
         #parse the file for the hmtl
         soup = BeautifulSoup(html_info, "html.parser")
 
-        myvals = soup.find_all("text", "value-text")
+        myvals = soup.find_all("div", "gauge")
         myconds = soup.find_all("div", "cond")
         
         #create the hassio sensors for today and tomorrow for sinus
         if(len(myvals) > 1):
-            self.set_state("sensor.acc_sinus_today", state=myvals[0].text, replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Today", "today_sinus_value": myvals[0].text , "today_sinus_phrase": myconds[0].text })
-            self.set_state("sensor.acc_sinus_tomorrow", state=myvals[1].text, replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Tomorrow", "tomorrow_sinus_value": myvals[1].text , "tomorrow_sinus_phrase": myconds[1].text })
+            myvalseta = self.cleanString(myvals[0].text.split('>'))
+            myvalsetb = self.cleanString(myvals[1].text.split('>'))
+            self.set_state("sensor.acc_sinus_today", state=myvalseta, replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Today", "today_sinus_value": myvals[0].text , "today_sinus_phrase": myconds[0].text })
+            self.set_state("sensor.acc_sinus_tomorrow", state=myvalsetb, replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Tomorrow", "tomorrow_sinus_value": myvals[1].text , "tomorrow_sinus_phrase": myconds[1].text })
         else:
             self.set_state("sensor.acc_sinus_today", state='Unknown', replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Today", "today_sinus_value": 'Unknown' , "today_sinus_phrase": 'Unknown' })
             self.set_state("sensor.acc_sinus_tomorrow", state='Unknown', replace=True, attributes={"icon": "mdi:head-remove-outline", "friendly_name": "Sinus Tomorrow", "tomorrow_sinus_value": 'Unknown' , "tomorrow_sinus_phrase": 'Unknown' })
