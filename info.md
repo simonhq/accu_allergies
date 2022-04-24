@@ -26,6 +26,7 @@ accu_allergies:
   URL_COUNTRY: "au"
   URL_LANG: "en"
   URL_POSTCODE: ""
+  WEB_VER: ""
 ```
 
 key | optional | type | default | description
@@ -40,35 +41,32 @@ key | optional | type | default | description
 `URL_COUNTRY` | False | string | | The country code on the AccuWeather webpage for the node you want information for
 `URL_LANG` | False | string | | The language code on the AccuWeather webpage for the node you want information for
 `URL_POSTCODE` | True | string | | Some locations use the postcode as well as an ID in the AccuWeather webpage URL this will default to the ID value if left blank
+`WEB_VER` | True | string | | Some locations have transitioned to a new website template for AccuWeather - use "APRIL22" if your area has the new template
 
 ## Sensors to be created
 
-This app will create 25 sensors
+This app will create sensors
 
 * sensor.acc_data_last_sourced
-* sensor.acc_ragweed_pollen_today
-* sensor.acc_ragweed_pollen_tomorrow
-* sensor.acc_grass_pollen_today
-* sensor.acc_grass_pollen_tomorrow
-* sensor.acc_tree_pollen_today
-* sensor.acc_tree_pollen_tomorrow
-* sensor.acc_mold_today
-* sensor.acc_mold_tomorrow
-* sensor.acc_dust_today
-* sensor.acc_dust_tomorrow
-* sensor.acc_air_today
-* sensor.acc_air_tomorrow
-* sensor.acc_common_cold_today
-* sensor.acc_common_cold_tomorrow
-* sensor.acc_flu_today
-* sensor.acc_flu_tomorrow
-* sensor.acc_asthma_today
-* sensor.acc_asthma_tomorrow
-* sensor.acc_arthritis_today
-* sensor.acc_arthritis_tomorrow
-* sensor.acc_migraine_today
-* sensor.acc_migraine_tomorrow
-* sensor.acc_sinus_today
-* sensor.acc_sinus_tomorrow
+
+Pre APRIL22
+
+sensors for each of the types for today and tomorrow (24 in total)
+ragweed pollen, grass pollen, tree pollen, mold, dust, air quality, common cold, flu, asthma, arthritis, migraine, sinus
+
+each sensor is a rating from 1->10
 
 The actual site holds 12 days of information for each of the 12 concepts, but I have only chosen to get the current day and the next day.
+
+Post APRIL22
+
+air quality for today and tomorrow
+
+sensors for each of the types for today only
+
+each sensor is a low->extreme
+
+dust & dander, sinus pressure, asthma, grass pollen, ragweed pollen, tree pollen, mold, migraine, arthritis, common cold, flu, 
+indoor pests, outdoor pests, mosquitos, outdoor entertaining, lawn mowing, composting, air travel, driving, fishing, running
+golf, biking & cycling, beach & pool, stargazing, hiking
+

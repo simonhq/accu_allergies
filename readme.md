@@ -7,7 +7,13 @@ _Creates sensors for Home Assistant with the AccuWeather Allergy level informati
 
 ## Lovelace Example
 
-![Example of Allergies information in Lovelace](https://github.com/simonhq/accu_allergies/blob/master/accu_allergies_glances.PNG)
+PRE APRIL22 changes
+
+![Example of Allergies information in the Dashboard](https://github.com/simonhq/accu_allergies/blob/master/accu_allergies_glances.PNG)
+
+APRIL22 changes
+
+![Example of Allergies information in the Dashboard](https://github.com/simonhq/accu_allergies/blob/master/post_april22.jpg)
 
 ## Installation
 
@@ -23,10 +29,9 @@ As this is non time critical sensor, it only gets the information on a set time 
 
 ### To Run outside of the schedule
 
-You will need to create an input_boolean entity to watch for when to update the sensor. When this `input_boolean` is turned on, whether manually or by another automation you
-create, the scraping process will be run to create/update the sensor.
+You will need to create an input_boolean entity to watch for when to update the sensor. When this `input_boolean` is turned on, whether manually or by another automation you create, the scraping process will be run to create/update the sensor.
 
-To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, just reads from your saved data file from that morning.
+To reduce the number of requests to the website, I have made this a two stage system, with one `input_boolean` controlling when the data is requested from the website and a second when you want to update the sensors, meaning doing a HA restart won't trigger html requests, it will just read from your saved data file from that morning.
 
 Therefore you will need to chain the two `input_boolean` requests so that one is offset by a minute to allow for the data to be downloaded.
 
@@ -55,6 +60,7 @@ accu_allergies:
   URL_COUNTRY: "au"
   URL_LANG: "en"
   URL_POSTCODE: ""
+  WEB_VER: "" # or use "APRIL22"
 ```
 
 key | optional | type | default | description
@@ -68,39 +74,36 @@ key | optional | type | default | description
 `URL_CITY` | False | string | | The name on the AccuWeather webpage for the node you want information for
 `URL_COUNTRY` | False | string | | The country code on the AccuWeather webpage for the node you want information for
 `URL_LANG` | False | string | | The language code on the AccuWeather webpage for the node you want information for
-`URL_POSTCODE` | True | string | | Some locations use the postcode as well as an ID in the AccuWeather webpage URL, this will default to the ID value if left blank
+`URL_POSTCODE` | True | string | | Some locations use the postcode as well as an ID in the AccuWeather webpage URL this will default to the ID value if left blank
+`WEB_VER` | True | string | | Some locations have transitioned to a new website template for AccuWeather - use "APRIL22" if your area has the new template
 
 ## Sensors to be created
 
-This app will create 25 sensors
+This app will create sensors
 
 * sensor.acc_data_last_sourced
-* sensor.acc_ragweed_pollen_today
-* sensor.acc_ragweed_pollen_tomorrow
-* sensor.acc_grass_pollen_today
-* sensor.acc_grass_pollen_tomorrow
-* sensor.acc_tree_pollen_today
-* sensor.acc_tree_pollen_tomorrow
-* sensor.acc_mold_today
-* sensor.acc_mold_tomorrow
-* sensor.acc_dust_today
-* sensor.acc_dust_tomorrow
-* sensor.acc_air_today
-* sensor.acc_air_tomorrow
-* sensor.acc_common_cold_today
-* sensor.acc_common_cold_tomorrow
-* sensor.acc_flu_today
-* sensor.acc_flu_tomorrow
-* sensor.acc_asthma_today
-* sensor.acc_asthma_tomorrow
-* sensor.acc_arthritis_today
-* sensor.acc_arthritis_tomorrow
-* sensor.acc_migraine_today
-* sensor.acc_migraine_tomorrow
-* sensor.acc_sinus_today
-* sensor.acc_sinus_tomorrow
+
+Pre APRIL22
+
+sensors for each of the types for today and tomorrow (24 in total)
+ragweed pollen, grass pollen, tree pollen, mold, dust, air quality, common cold, flu, asthma, arthritis, migraine, sinus
+
+each sensor is a rating from 1->10
 
 The actual site holds 12 days of information for each of the 12 concepts, but I have only chosen to get the current day and the next day.
+
+Post APRIL22
+
+air quality for today and tomorrow
+
+sensors for each of the types for today only
+
+each sensor is a low->extreme
+
+dust & dander, sinus pressure, asthma, grass pollen, ragweed pollen, tree pollen, mold, migraine, arthritis, common cold, flu, 
+indoor pests, outdoor pests, mosquitos, outdoor entertaining, lawn mowing, composting, air travel, driving, fishing, running
+golf, biking & cycling, beach & pool, stargazing, hiking
+
 
 ## Issues/Feature Requests
 
