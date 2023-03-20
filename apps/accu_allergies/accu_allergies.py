@@ -48,6 +48,7 @@ import datetime
 import appdaemon.plugins.hass.hassapi as hass
 import requests
 import shelve
+import urllib.parse
 
 class Get_Accu_Allergies(hass.Hass):
 
@@ -77,6 +78,12 @@ class Get_Accu_Allergies(hass.Hass):
     #["/allergies-weather/","allergies"], ["/cold-flu-weather/","coldflu"]
     url_txt_xtdA = [["/allergies-weather/", "?name=ragweed-pollen" , "ragweed"], ["/allergies-weather/", "?name=grass-pollen" , "grass"], ["/allergies-weather/", "?name=tree-pollen" , "tree"], ["/allergies-weather/", "?name=mold" , "mold"], ["/allergies-weather/", "?name=dust-dander" , "dust"], ["/cold-flu-weather/", "?name=common-cold" , "cold"], ["/cold-flu-weather/", "?name=flu" , "flu"]]
     url_txt_xtdB = []
+
+    icon_txt_set = {'Air Quality': 'air-purifier','Dust & Dander': 'weather-dust','Sinus Pressure': 'head-sync','Asthma': 'head-dots-horizontal',
+                    'Migraine': 'head-alert','Arthritis': 'bone','Common Cold': 'head-snowflake','Flu': 'head-flash','Indoor Pests': 'bug',
+                    'Outdoor Pests': 'spider','Mosquitos': 'bee','Outdoor Entertaining': 'party-popper','Lawn Mowing': 'mower',
+                    'Composting': 'compost','Air Travel': 'airplane','Driving': 'car','Fishing': 'fish','Running': 'run',
+                    'Golf': 'golf','Biking & Cycling': 'bike','Beach & Pool': 'beach','Stargazing': 'weather-night','Hiking': 'hiking'}
 
     def cleanString(self, s):
         retstr = ""
@@ -143,7 +150,7 @@ class Get_Accu_Allergies(hass.Hass):
     #request the website information
     def get_html_data(self):
         #build the url for the correct country and area
-        start_url = self.url_base + "/" + self.URL_LANG + "/" + self.URL_COUNTRY + "/" + self.URL_CITY + "/" + self.URL_POSTCODE
+        start_url = self.url_base + "/" + self.URL_LANG + "/" + urllib.parse.quote(self.URL_COUNTRY) + "/" + urllib.parse.quote(self.URL_CITY) + "/" + self.URL_POSTCODE
         
         #for each of the basic pages (asthma, arthritis, migraine and sinus)
         for sets in self.url_txt_sets:
@@ -268,8 +275,11 @@ class Get_Accu_Allergies(hass.Hass):
             #create the hassio sensors for today and tomorrow for ragweed        
                 senid = "sensor.acc_" + val.text.strip().lower().replace(" ","_").replace("&","and")  + "_today"
                 self.log(senid)
-                self.set_state(senid, state=txt.text, replace=True, attributes={"icon": "mdi:air-purifier", "friendly_name": val.text + " Today"})
-
+                ticon = 'mdi:' + self.icon_txt_set[val.text]
+                if ticon == 'mdi:':
+                    ticon = 'mdi:air-purifier'
+                #self.set_state(senid, state=txt.text, replace=True, attributes={"icon": "mdi:air-purifier", "friendly_name": val.text + " Today"})
+                self.set_state(senid, state=txt.text, replace=True, attributes={"icon": ticon, "friendly_name": val.text + " Today"})
 
 
     #get the info for pollens - ragweed, grass, tree, mold, dust and air quality
