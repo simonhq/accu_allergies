@@ -83,7 +83,8 @@ class Get_Accu_Allergies(hass.Hass):
                     'Migraine': 'head-alert','Arthritis': 'bone','Common Cold': 'head-snowflake','Flu': 'head-flash','Indoor Pests': 'bug',
                     'Outdoor Pests': 'spider','Mosquitos': 'bee','Outdoor Entertaining': 'party-popper','Lawn Mowing': 'mower',
                     'Composting': 'compost','Air Travel': 'airplane','Driving': 'car','Fishing': 'fish','Running': 'run',
-                    'Golf': 'golf','Biking & Cycling': 'bike','Beach & Pool': 'beach','Stargazing': 'weather-night','Hiking': 'hiking'}
+                    'Golf': 'golf','Biking & Cycling': 'bike','Beach & Pool': 'beach','Stargazing': 'weather-night','Hiking': 'hiking',
+                    'Tree Pollen': 'tree'}
 
     def cleanString(self, s):
         retstr = ""
@@ -275,8 +276,9 @@ class Get_Accu_Allergies(hass.Hass):
             #create the hassio sensors for today and tomorrow for ragweed        
                 senid = "sensor.acc_" + val.text.strip().lower().replace(" ","_").replace("&","and")  + "_today"
                 self.log(senid)
-                ticon = 'mdi:' + self.icon_txt_set[val.text]
-                if ticon == 'mdi:':
+                if val.text in self.icon_txt_set:
+                    ticon = 'mdi:' + self.icon_txt_set[val.text]
+                else: 
                     ticon = 'mdi:air-purifier'
                 #self.set_state(senid, state=txt.text, replace=True, attributes={"icon": "mdi:air-purifier", "friendly_name": val.text + " Today"})
                 self.set_state(senid, state=txt.text, replace=True, attributes={"icon": ticon, "friendly_name": val.text + " Today"})
